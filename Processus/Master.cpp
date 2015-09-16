@@ -1,18 +1,21 @@
 #include <mpi.h>
 #include <stdio.h>
 
+
+
 int main( int argc, char *argv[] )
 {
     int i, compteur;
     MPI_Status etat;
 
+    int nbSlaves = 2 ; 
 
     char *cmds[2] = {
         "Slave",
         "Coordinator",
     };
     int np[2] = {
-        2,
+        nbSlaves,
         1,
     };
 
@@ -36,7 +39,7 @@ int main( int argc, char *argv[] )
     printf ("Pere : J'ai lance toutes les instances.\n");
     // Le père communique de façon synchrone avec chacun de
     // ses fils en utilisant l'espace de communication intercomm
-    for (i=0; i<3; i++)
+    for (i=0; i<nbSlaves+1; i++)
     {
         MPI_Send (&compteur,1,MPI_INT,i,0,intercomm);
         printf ("Pere : Envoi vers %d.\n", i);
