@@ -18,11 +18,13 @@ int main( int argc, char *argv[] )
         char end = 'c';
         int nbSlaves; 
         int ambiantTemperature; 
-        MPI_Recv(&nbSlaves, 1, MPI_INT, 0, 0, parent, &etat);
         MPI_Recv(&ambiantTemperature, 1, MPI_INT, 0, 0, parent, &etat);
         printf ("Je suis un coordinateur ! La temperature ambiante est de %d°C \n", ambiantTemperature);
+        MPI_Recv(&nbSlaves, 1, MPI_INT, 0, 0, parent, &etat);
+        printf ("Je suis un coordinateur ! Le coordinateur a reçu la taille de la plaque %d \n", nbSlaves);
 
         for(int k = 0; k < 10; k++){
+
             for(int i=1; i<=nbSlaves; i++){
                 MPI_Send (&ambiantTemperature,1,MPI_INT, i, 0, MPI_COMM_WORLD);            
             }
