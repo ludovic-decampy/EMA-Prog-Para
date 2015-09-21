@@ -6,11 +6,12 @@
 int main( int argc, char *argv[] )
 {
     // Partie plaque 
+    float ambiantTemperature = 20;
     int width=4; 
     int nbSlaves=12 ; 
-    int cells[12] = {
+    float cells[12] = {
         30,30,30,30,
-        30,50,30,30,
+        30,60,30,30,
         30,30,30,30
     };
     
@@ -52,14 +53,15 @@ int main( int argc, char *argv[] )
     // ses fils en utilisant l'espace de communication intercomm
 
     // envoie de la tempreature ambiant au coordinateur 
-    int ambiantTemperature = 20;
-    MPI_Send (&ambiantTemperature,1,MPI_INT,0,0,intercomm);
+    
+    MPI_Send (&ambiantTemperature,1,MPI_FLOAT,0,0,intercomm);
+    MPI_Send (&width,1,MPI_INT,0,0,intercomm);
 
     // envoie de la temperature aux esclaves 
     for (i=1; i<=nbSlaves; i++)
     {
-        int cellTemperature = cells[i-1]; 
-        MPI_Send (&cellTemperature,1,MPI_INT,i,0,intercomm);
+        float cellTemperature = cells[i-1]; 
+        MPI_Send (&cellTemperature,1,MPI_FLOAT,i,0,intercomm);
         MPI_Send (&width,1,MPI_INT,i,0,intercomm);
     }
 

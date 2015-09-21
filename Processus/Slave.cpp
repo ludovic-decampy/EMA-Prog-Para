@@ -38,16 +38,16 @@ int main( int argc, char *argv[] )
         int width; 
 
 
-        int cellTemperature = -9999; 
-        int ambiantTemperature; 
+        float cellTemperature = -9999; 
+        float ambiantTemperature; 
 
 
-        MPI_Recv(&cellTemperature, 1, MPI_INT, 0, 0, parent, &etat);
-        printf ("Je suis un esclave ! La temperature de ma cellule est de %d°C \n", cellTemperature);        
+        MPI_Recv(&cellTemperature, 1, MPI_FLOAT, 0, 0, parent, &etat);
+        //printf ("Je suis un esclave ! La temperature de ma cellule est de %f°C \n", cellTemperature);        
         MPI_Recv(&width, 1, MPI_INT, 0, 0, parent, &etat);
-        printf ("Je suis un esclave ! La largeur de la plaque %d \n", width);        
+        //printf ("Je suis un esclave ! La largeur de la plaque %d \n", width);        
         MPI_Recv(&nbSlaves, 1, MPI_INT, 0, 0, parent, &etat);
-        printf ("Je suis un esclave ! La taille de la plaque %d \n", nbSlaves);
+        //printf ("Je suis un esclave ! La taille de la plaque %d \n", nbSlaves);
 
         int* coords = getSlaveXYFromId(myrank, width); 
 
@@ -56,29 +56,27 @@ int main( int argc, char *argv[] )
 
         //cout << "Je suis jesus n°"<<myrank<< " ("<<x<<";"<<y<<")" << "calc " << getSlaveIdFromXY(x,y,width) << endl; 
 
+        //CACA JULIEN 
+        MPI_Send(&cellTemperature, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);            
+        //CACA JULIEN
+
         
         // reception du coordinateur 
 
         for(int i=0; i<10; i++){
 
-            MPI_Recv(&ambiantTemperature, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &etat);
-
-
-            int prevTemperature; 
-            int nextTemperature; 
-            int prevIndex; 
-            int nextIndex;
+            MPI_Recv(&ambiantTemperature, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD, &etat);
 
             MPI_Request request; 
-            int neighbourTemp;
-            int meanTemp = 0;  
+            float neighbourTemp;
+            float meanTemp = 0;  
 
 
             for(int i=-1; i<=1; i++){
                 for(int j=-1; j<=1; j++){
                     int neighbourSlaveId = getSlaveIdFromXY(x+i, y+j, width); 
                     if(neighbourSlaveId > 0 && neighbourSlaveId <= nbSlaves){
-                        MPI_Isend(&cellTemperature, 1, MPI_INT, neighbourSlaveId, 0, MPI_COMM_WORLD, &request);            
+                        MPI_Isend(&cellTemperature, 1, MPI_FLOAT, neighbourSlaveId, 0, MPI_COMM_WORLD, &request);            
                     }
                 }
             }
@@ -87,10 +85,11 @@ int main( int argc, char *argv[] )
                 for(int j=-1; j<=1; j++){
                     int neighbourSlaveId = getSlaveIdFromXY(x+i, y+j, width); 
                     if(neighbourSlaveId > 0 && neighbourSlaveId <= nbSlaves){
-                        MPI_Recv(&neighbourTemp, 1, MPI_INT, neighbourSlaveId, 0, MPI_COMM_WORLD, &etat);
+                        MPI_Recv(&neighbourTemp, 1, MPI_FLOAT, neighbourSlaveId, 0, MPI_COMM_WORLD, &etat);
                     }else{
                         neighbourTemp = ambiantTemperature; 
                     }
+                    //cout << "MEAN TEMP += " << neighbourTemp << endl; 
                     meanTemp += neighbourTemp;
                 }
             }
@@ -100,7 +99,7 @@ int main( int argc, char *argv[] )
        
             cellTemperature = meanTemp; 
             //printf("L'escave %d a mis a jour sa temperature %d\n", myrank, cellTemperature);
-            MPI_Send(&cellTemperature, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);            
+            MPI_Send(&cellTemperature, 1, MPI_FLOAT, 0, 0, MPI_COMM_WORLD);            
         }
 
     }
