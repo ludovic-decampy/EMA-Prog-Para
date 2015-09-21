@@ -10,13 +10,14 @@ int main( int argc, char *argv[] )
     MPI_Comm_rank (MPI_COMM_WORLD,&myrank);
     if (parent == MPI_COMM_NULL)
     {
-        printf ("Fils %d : Coordinator : Pas de pere !\n", myrank);
+        printf ("Fils %d : Slave : Pas de pere !\n", myrank);
     }
     else {
-        MPI_Recv(&compteur, 1, MPI_INT, 0, 0, parent, &etat);
-        printf ("Fils %d : Coordinator : Reception du pere !\n", myrank);
-        MPI_Send(&compteur, 1, MPI_INT, 0, 0, parent);
-        printf ("Fils %d : Coordinator : Envoi vers le pere !\n", myrank);
+
+        int ambiantTemperature = 0; 
+        MPI_Recv(&ambiantTemperature, 1, MPI_INT, 0, 0, parent, &etat);
+        printf ("Je suis un coordinateur ! La temperature ambiante est de %d°C \n", ambiantTemperature);
+
     }
     MPI_Finalize();
     return 0;

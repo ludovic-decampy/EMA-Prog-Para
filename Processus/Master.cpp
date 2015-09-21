@@ -11,12 +11,12 @@ int main( int argc, char *argv[] )
     int nbSlaves = 2 ; 
 
     char *cmds[2] = {
-        "Slave",
-        "Coordinator",
+        (char*) "Coordinator",
+        (char*) "Slave",
     };
     int np[2] = {
-        nbSlaves,
         1,
+        nbSlaves,
     };
 
     MPI_Info infos[2] = { MPI_INFO_NULL, MPI_INFO_NULL };
@@ -36,17 +36,22 @@ int main( int argc, char *argv[] )
         &intercomm,
         errcodes
     );
+
     printf ("Pere : J'ai lance toutes les instances.\n");
     // Le père communique de façon synchrone avec chacun de
     // ses fils en utilisant l'espace de communication intercomm
-    for (i=0; i<nbSlaves+1; i++)
+
+    //Coordinator 
+    int ambiantTemperature = 20;
+    MPI_Send (&ambiantTemperature,1,MPI_INT,0,0,intercomm);
+
+    // Esclaves 
+    for (i=1; i<nbSlaves+1; i++)
     {
-        MPI_Send (&compteur,1,MPI_INT,i,0,intercomm);
-        printf ("Pere : Envoi vers %d.\n", i);
-        MPI_Recv(&compteur, 1, MPI_INT,i, 0, intercomm, &etat);
-        printf ("Pere : Reception de %d.\n", i);
+        int cellTemperature = 30; 
+        MPI_Send (&cellTemperature,1,MPI_INT,i,0,intercomm);
     }
-    printf ("Pere : Fin.\n");
+
     MPI_Finalize();
     return 0;
 }

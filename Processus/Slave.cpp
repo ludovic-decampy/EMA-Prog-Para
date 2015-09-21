@@ -13,10 +13,11 @@ int main( int argc, char *argv[] )
         printf ("Fils %d : Slave : Pas de pere !\n", myrank);
     }
     else {
-        MPI_Recv(&compteur, 1, MPI_INT, 0, 0, parent, &etat);
-        printf ("Fils %d : Slave : Reception du pere !\n", myrank);
-        MPI_Send(&compteur, 1, MPI_INT, 0, 0, parent);
-        printf ("Fils %d : Slave : Envoi vers le pere !\n", myrank);
+
+        int cellTemperature = 0; 
+        MPI_Recv(&cellTemperature, 1, MPI_INT, 0, 0, parent, &etat);
+        printf ("Je suis un esclave ! La temperature de ma cellule est de %d°C \n", cellTemperature);
+
     }
     MPI_Finalize();
     return 0;
