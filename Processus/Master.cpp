@@ -43,6 +43,7 @@ int main( int argc, char *argv[] )
 
     //Coordinator 
     int ambiantTemperature = 20;
+    MPI_Send (&nbSlaves,1,MPI_INT,0,0,intercomm);
     MPI_Send (&ambiantTemperature,1,MPI_INT,0,0,intercomm);
 
     // Esclaves 
@@ -52,11 +53,11 @@ int main( int argc, char *argv[] )
         MPI_Send (&cellTemperature,1,MPI_INT,i,0,intercomm);
     }
 
-
-    for (i=0; i <nbSlaves+1; i++){
-        char result;
-        MPI_Recv(&result, 1, MPI_INT,i, 0, intercomm, &etat);
-    }
+    
+    // Reception du coordinateur 
+    char result;
+    MPI_Recv(&result, 1, MPI_INT,0, 0, intercomm, &etat);
+    
     printf ("Pere : J'ai fini \n");
 
     MPI_Finalize();

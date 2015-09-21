@@ -16,9 +16,18 @@ int main( int argc, char *argv[] )
 
         char end = 's';
         int cellTemperature; 
+        int ambiantTemperature; 
         MPI_Recv(&cellTemperature, 1, MPI_INT, 0, 0, parent, &etat);
         printf ("Je suis un esclave ! La temperature de ma cellule est de %d°C \n", cellTemperature);
-        MPI_Send (&end,1,MPI_CHAR, 0, 0, parent);
+        
+        // reception du coordinateur 
+
+        for(int i=0; i<10; i++){
+            MPI_Recv(&ambiantTemperature, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &etat);
+            printf ("/!\\ Reception coordinateur :  %d°C \n", ambiantTemperature); 
+            MPI_Send(&ambiantTemperature, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);            
+        }
+
     }
 
     
