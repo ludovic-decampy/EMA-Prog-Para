@@ -5,10 +5,19 @@
 
 int main( int argc, char *argv[] )
 {
+    // Partie plaque 
+    int width=4; 
+    int nbSlaves=12 ; 
+    int cells[12] = {
+        30,30,30,30,
+        30,50,30,30,
+        30,30,30,30
+    };
+    
+
+    // Partie MPI     
     int i, compteur;
     MPI_Status etat;
-
-    int nbSlaves = 2 ; 
 
     char *cmds[2] = {
         (char*) "Coordinator",
@@ -37,7 +46,8 @@ int main( int argc, char *argv[] )
         errcodes
     );
 
-    printf ("Pere : J'ai lance toutes les instances.\n");
+
+
     // Le père communique de façon synchrone avec chacun de
     // ses fils en utilisant l'espace de communication intercomm
 
@@ -46,10 +56,11 @@ int main( int argc, char *argv[] )
     MPI_Send (&ambiantTemperature,1,MPI_INT,0,0,intercomm);
 
     // envoie de la temperature aux esclaves 
-    for (i=1; i<nbSlaves+1; i++)
+    for (i=1; i<=nbSlaves; i++)
     {
-        int cellTemperature = 30; 
+        int cellTemperature = cells[i-1]; 
         MPI_Send (&cellTemperature,1,MPI_INT,i,0,intercomm);
+        MPI_Send (&width,1,MPI_INT,i,0,intercomm);
     }
 
     // envoie de la taille de la plaque 
@@ -57,8 +68,6 @@ int main( int argc, char *argv[] )
     {
         MPI_Send (&nbSlaves,1,MPI_INT,i,0,intercomm);
     }
-
-
 
     // Reception du signal de fin du coordinateur 
     char result;
