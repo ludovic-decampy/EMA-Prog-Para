@@ -52,6 +52,13 @@ int main( int argc, char *argv[] )
         MPI_Send (&cellTemperature,1,MPI_INT,i,0,intercomm);
     }
 
+
+    for (i=0; i <nbSlaves+1; i++){
+        char result;
+        MPI_Recv(&result, 1, MPI_INT,i, 0, intercomm, &etat);
+    }
+    printf ("Pere : J'ai fini \n");
+
     MPI_Finalize();
     return 0;
 }

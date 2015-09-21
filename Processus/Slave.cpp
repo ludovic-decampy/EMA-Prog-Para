@@ -14,11 +14,15 @@ int main( int argc, char *argv[] )
     }
     else {
 
-        int cellTemperature = 0; 
+        char end = 's';
+        int cellTemperature; 
         MPI_Recv(&cellTemperature, 1, MPI_INT, 0, 0, parent, &etat);
         printf ("Je suis un esclave ! La temperature de ma cellule est de %d°C \n", cellTemperature);
-
+        MPI_Send (&end,1,MPI_CHAR, 0, 0, parent);
     }
+
+    
+
     MPI_Finalize();
     return 0;
 }

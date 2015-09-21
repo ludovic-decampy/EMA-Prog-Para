@@ -13,11 +13,11 @@ int main( int argc, char *argv[] )
         printf ("Fils %d : Slave : Pas de pere !\n", myrank);
     }
     else {
-
-        int ambiantTemperature = 0; 
+        char end = 'e';
+        int ambiantTemperature; 
         MPI_Recv(&ambiantTemperature, 1, MPI_INT, 0, 0, parent, &etat);
         printf ("Je suis un coordinateur ! La temperature ambiante est de %d°C \n", ambiantTemperature);
-
+        MPI_Send (&end,1,MPI_CHAR, 0, 0, parent);
     }
     MPI_Finalize();
     return 0;
