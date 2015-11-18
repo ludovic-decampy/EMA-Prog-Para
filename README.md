@@ -5,6 +5,7 @@ Groupe de travail
 * Julien Chavance
 * Ludovic Decampy
 * Camille Lescalliez 
+
 Compilation
 -------------
 Pour compiler et lancer le projet à la volée : 
