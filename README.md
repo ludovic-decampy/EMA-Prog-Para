@@ -15,7 +15,7 @@ compile.sh
 ```
 Execution
 -------------
-Le programme envoit sur **stdout** le code HTML de sorties.  
+Le programme envoit sur **stdout** le code HTML.  
 Pour voir le rendu de la sortie, pensez à rediriger la sortie vers un fichier **.html**
 ```
 mpirun -np 1 ./Master > out.html
